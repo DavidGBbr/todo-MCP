@@ -1,5 +1,13 @@
 # AI-DLC Audit Log
 
+## Unit 2 MCP Server + Infrastructure — COMPLETED
+**Timestamp**: 2026-06-17T00:12:00Z
+**User Input**: "Using AI-DLC let's implement the unit 2 before claude code mcp setup"
+**AI Response**: Implemented `todo_mcp/api/` with FastMCP server setup, 6 MCP tool handlers, `TodoService`, structured JSON logging, safe structured tool errors, Dockerfile, production compose, dev compose, and `.env.example`. Closed Unit 2 contract gaps by adding due-date filters plus one-or-more status/priority list filters. Fixed test harness issues blocking verification. Verification passed: full pytest (44 passed), full Ruff, mypy, production compose config, and dev compose config.
+**Context**: Unit 2 completed before Claude Code MCP client setup.
+
+---
+
 ## Workspace Detection
 **Timestamp**: 2026-06-17T00:00:00Z
 **User Input**: "Using AI DLC let's build a minimal MCP responsible to manage a todo-list, we'll have some tools for each operation and each item in this todo have some properties: REQUIRED: id (uuid), title, description, status (to do, in progress, blocked, done), priority (high, medium, low), due date. OPTIONAL: Project/List: The parent folder or category the task belongs to (e.g., Work, Home, Side Project). Context/Tags: Specific labels or locations needed to do the work (e.g., @computer, @calls, @supermarket). Assignee: For shared lists, the person responsible for completing the task. Effort/Duration: An estimate of how long the task will take (e.g., 30 minutes, 2 hours). Subtasks: A nested array of smaller, actionable items that make up a larger project. For stack I'd like to use Python + UV, FastMCP and docker for containerization."

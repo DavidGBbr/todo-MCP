@@ -16,6 +16,11 @@ target_metadata = Base.metadata
 
 
 def get_url() -> str:
+    configured_url = config.get_main_option("sqlalchemy.url")
+    if configured_url and not configured_url.startswith("driver://"):
+        if configured_url.startswith("postgresql://"):
+            return configured_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return configured_url
     return str(get_settings().database_url)
 
 

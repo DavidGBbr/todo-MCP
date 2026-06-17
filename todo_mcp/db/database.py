@@ -1,12 +1,17 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from todo_mcp.core.config import get_settings
 
 
-def _make_engine():  # type: ignore[no-untyped-def]
+def _make_engine() -> AsyncEngine:
     settings = get_settings()
     return create_async_engine(
         str(settings.database_url),

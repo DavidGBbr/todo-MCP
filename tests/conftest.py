@@ -1,4 +1,3 @@
-import os
 from collections.abc import AsyncGenerator
 
 import pytest
@@ -32,7 +31,7 @@ def alembic_upgrade(db_url: str) -> None:
     command.upgrade(alembic_cfg, "head")
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture()
 async def engine(db_url: str):
     eng = create_async_engine(db_url, pool_pre_ping=True)
     yield eng

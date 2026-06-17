@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16.3-bookworm
+    environment:
+      POSTGRES_DB: todo_mcp
+      POSTGRES_USER: todo_mcp
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD before running compose}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todo_mcp -d todo_mcp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - todo-internal
+
+  todo-mcp:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+asyncpg://todo_mcp:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD before running compose}@postgres:5432/todo_mcp
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["sh", "-c", "alembic upgrade head && python -m todo_mcp.api.server"]
+    stdin_open: true
+    networks:
+      - todo-internal
+
+volumes:
+  postgres-data:
+
+networks:
+  todo-internal:
+    internal: true

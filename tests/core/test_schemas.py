@@ -10,7 +10,6 @@ from todo_mcp.core.schemas import (
     UpdateTodoInput,
 )
 
-
 # --- Example-based: CreateTodoInput ---
 
 

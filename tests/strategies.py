@@ -1,21 +1,39 @@
 from datetime import date, timedelta
-from uuid import uuid4
 
 from hypothesis import strategies as st
 
 from todo_mcp.core.enums import Priority, SortField, SortOrder, Status
-from todo_mcp.core.schemas import CreateTodoInput, ListTodosInput, SubtaskInput, TodoOut, SubtaskOut
+from todo_mcp.core.schemas import (
+    CreateTodoInput,
+    ListTodosInput,
+    SubtaskInput,
+    SubtaskOut,
+    TodoOut,
+)
 
 _statuses = st.sampled_from(list(Status))
 _priorities = st.sampled_from(list(Priority))
 _sort_fields = st.sampled_from(list(SortField))
 _sort_orders = st.sampled_from(list(SortOrder))
 
-_tag = st.text(min_size=1, max_size=100).filter(lambda s: s.strip())
+def _postgres_text(value: str) -> bool:
+    return "\x00" not in value
+
+
+def _non_empty_postgres_text(value: str) -> bool:
+    return bool(value.strip()) and _postgres_text(value)
+
+
+_tag = st.text(min_size=1, max_size=100).filter(_non_empty_postgres_text)
 _tags = st.lists(_tag, max_size=5)
-_title = st.text(min_size=1, max_size=255).filter(lambda s: s.strip())
-_opt_str_255 = st.one_of(st.none(), st.text(min_size=1, max_size=255).filter(lambda s: s.strip()))
-_opt_str_100 = st.one_of(st.none(), st.text(min_size=1, max_size=100).filter(lambda s: s.strip()))
+_title = st.text(min_size=1, max_size=255).filter(_non_empty_postgres_text)
+_description = st.text(max_size=2000).filter(_postgres_text)
+_opt_str_255 = st.one_of(
+    st.none(), st.text(min_size=1, max_size=255).filter(_non_empty_postgres_text)
+)
+_opt_str_100 = st.one_of(
+    st.none(), st.text(min_size=1, max_size=100).filter(_non_empty_postgres_text)
+)
 
 _today = date.today()
 _due_date = st.dates(min_value=_today, max_value=_today + timedelta(days=365 * 5))
@@ -34,7 +52,7 @@ def create_todo_input_strategy() -> st.SearchStrategy[CreateTodoInput]:
     return st.builds(
         CreateTodoInput,
         title=_title,
-        description=st.text(max_size=2000),
+        description=_description,
         status=_statuses,
         priority=_priorities,
         due_date=_due_date,

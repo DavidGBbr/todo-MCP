@@ -25,5 +25,6 @@ class PageOutOfRangeError(Exception):
         self.page_size = page_size
         self.total_pages = total_pages
         super().__init__(
-            f"PAGE_OUT_OF_RANGE: page={page}, page_size={page_size}, total_pages={total_pages}"
+            "PAGE_OUT_OF_RANGE: "
+            f"page={page}, page_size={page_size}, total_pages={total_pages}"
         )

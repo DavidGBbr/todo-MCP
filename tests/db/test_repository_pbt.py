@@ -1,10 +1,18 @@
 import pytest
-from hypothesis import given, settings
+from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
+from sqlalchemy import delete
 
 from tests.strategies import create_todo_input_strategy, list_todos_input_strategy
-from todo_mcp.core.schemas import CreateTodoInput, ListTodosInput
+from todo_mcp.core.schemas import ListTodosInput
+from todo_mcp.db.models import Subtask, Todo
 from todo_mcp.db.repository import TodoRepository
+
+
+async def _clear_tables(session) -> None:
+    await session.execute(delete(Subtask))
+    await session.execute(delete(Todo))
+    await session.flush()
 
 
 @pytest.mark.asyncio
@@ -12,8 +20,12 @@ from todo_mcp.db.repository import TodoRepository
     inputs=st.lists(create_todo_input_strategy(), min_size=1, max_size=10),
     params=list_todos_input_strategy(),
 )
-@settings(max_examples=30)
+@settings(
+    max_examples=30,
+    suppress_health_check=[HealthCheck.function_scoped_fixture],
+)
 async def test_filter_invariant_filtered_subset_of_unfiltered(session, inputs, params):
+    await _clear_tables(session)
     repo = TodoRepository(session)
     for inp in inputs:
         await repo.create(inp)
@@ -50,8 +62,12 @@ async def test_filter_invariant_filtered_subset_of_unfiltered(session, inputs, p
 
 @pytest.mark.asyncio
 @given(inputs=st.lists(create_todo_input_strategy(), min_size=1, max_size=5))
-@settings(max_examples=20)
+@settings(
+    max_examples=20,
+    suppress_health_check=[HealthCheck.function_scoped_fixture],
+)
 async def test_pagination_invariant_pages_cover_all_items(session, inputs):
+    await _clear_tables(session)
     repo = TodoRepository(session)
     for inp in inputs:
         await repo.create(inp)
@@ -61,7 +77,9 @@ async def test_pagination_invariant_pages_cover_all_items(session, inputs):
     collected = []
     while True:
         try:
-            items, total = await repo.list(ListTodosInput(page=page, page_size=page_size))
+            items, total = await repo.list(
+                ListTodosInput(page=page, page_size=page_size)
+            )
         except Exception:
             break
         collected.extend(items)
@@ -77,8 +95,12 @@ async def test_pagination_invariant_pages_cover_all_items(session, inputs):
 
 @pytest.mark.asyncio
 @given(inputs=st.lists(create_todo_input_strategy(), min_size=1, max_size=5))
-@settings(max_examples=20)
+@settings(
+    max_examples=20,
+    suppress_health_check=[HealthCheck.function_scoped_fixture],
+)
 async def test_soft_delete_invariant(session, inputs):
+    await _clear_tables(session)
     repo = TodoRepository(session)
     todos = []
     for inp in inputs:

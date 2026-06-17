@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, Field, field_validator
@@ -29,7 +30,9 @@ class CreateTodoInput(BaseModel):
     def validate_tags(cls, v: list[str]) -> list[str]:
         for tag in v:
             if len(tag) > 100:
-                raise ValueError(f"Each tag must be at most 100 characters, got: {tag!r}")
+                raise ValueError(
+                    f"Each tag must be at most 100 characters, got: {tag!r}"
+                )
         return v
 
 
@@ -52,21 +55,32 @@ class UpdateTodoInput(BaseModel):
             return v
         for tag in v:
             if len(tag) > 100:
-                raise ValueError(f"Each tag must be at most 100 characters, got: {tag!r}")
+                raise ValueError(
+                    f"Each tag must be at most 100 characters, got: {tag!r}"
+                )
         return v
 
 
 class ListTodosInput(BaseModel):
-    status: Status | None = None
-    priority: Priority | None = None
+    status: list[Status] | None = None
+    priority: list[Priority] | None = None
     project: str | None = None
     assignee: str | None = None
     tags: list[str] | None = None
+    due_before: date | None = None
+    due_after: date | None = None
     include_deleted: bool = False
     sort_by: SortField = SortField.created_at
     sort_order: SortOrder = SortOrder.asc
     page: int = Field(default=1, ge=1)
     page_size: int = Field(default=20, ge=1, le=100)
+
+    @field_validator("status", "priority", mode="before")
+    @classmethod
+    def coerce_single_filter_value(cls, v: Any) -> Any:
+        if v is None or isinstance(v, list):
+            return v
+        return [v]
 
 
 class SubtaskOut(BaseModel):

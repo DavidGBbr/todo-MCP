@@ -1,6 +1,6 @@
 import math
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -35,7 +35,7 @@ class TodoRepository:
             assignee=data.assignee,
             effort=data.effort,
         )
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         todo.created_at = now
         todo.updated_at = now
 
@@ -98,7 +98,7 @@ class TodoRepository:
                         )
                     )
 
-        todo.updated_at = datetime.now(timezone.utc)
+        todo.updated_at = datetime.now(UTC)
         await self._session.flush()
         await self._session.refresh(todo)
         return todo
@@ -107,7 +107,7 @@ class TodoRepository:
         todo = await self.get_by_id(todo_id)
         if todo.deleted_at is not None:
             raise TodoAlreadyDeletedError(todo_id)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         todo.deleted_at = now
         todo.updated_at = now
         await self._session.flush()
@@ -118,7 +118,7 @@ class TodoRepository:
         if todo.deleted_at is None:
             raise TodoNotDeletedError(todo_id)
         todo.deleted_at = None
-        todo.updated_at = datetime.now(timezone.utc)
+        todo.updated_at = datetime.now(UTC)
         await self._session.flush()
         return todo
 
@@ -129,15 +129,21 @@ class TodoRepository:
             stmt = stmt.where(Todo.deleted_at.is_(None))
 
         if params.status is not None:
-            stmt = stmt.where(Todo.status == params.status.value)
+            statuses = [status.value for status in params.status]
+            stmt = stmt.where(Todo.status.in_(statuses))
         if params.priority is not None:
-            stmt = stmt.where(Todo.priority == params.priority.value)
+            priorities = [priority.value for priority in params.priority]
+            stmt = stmt.where(Todo.priority.in_(priorities))
         if params.project is not None:
             stmt = stmt.where(Todo.project == params.project)
         if params.assignee is not None:
             stmt = stmt.where(Todo.assignee == params.assignee)
         if params.tags is not None:
             stmt = stmt.where(Todo.tags.op("&&")(params.tags))
+        if params.due_before is not None:
+            stmt = stmt.where(Todo.due_date <= params.due_before)
+        if params.due_after is not None:
+            stmt = stmt.where(Todo.due_date >= params.due_after)
 
         count_stmt = select(func.count()).select_from(stmt.subquery())
         total: int = (await self._session.execute(count_stmt)).scalar_one()

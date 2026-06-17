@@ -9,7 +9,12 @@ from todo_mcp.core.exceptions import (
     TodoNotDeletedError,
     TodoNotFoundError,
 )
-from todo_mcp.core.schemas import CreateTodoInput, ListTodosInput, SubtaskInput, UpdateTodoInput
+from todo_mcp.core.schemas import (
+    CreateTodoInput,
+    ListTodosInput,
+    SubtaskInput,
+    UpdateTodoInput,
+)
 from todo_mcp.db.repository import TodoRepository
 
 
@@ -38,7 +43,10 @@ async def test_create_and_get(session):
 async def test_create_with_subtasks(session):
     repo = TodoRepository(session)
     inp = _make_input(
-        subtasks=[SubtaskInput(title="Sub A", done=False), SubtaskInput(title="Sub B", done=True)]
+        subtasks=[
+            SubtaskInput(title="Sub A", done=False),
+            SubtaskInput(title="Sub B", done=True),
+        ]
     )
     todo = await repo.create(inp)
     assert len(todo.subtasks) == 2
@@ -72,7 +80,9 @@ async def test_update_status(session):
 @pytest.mark.asyncio
 async def test_update_subtask_upsert(session):
     repo = TodoRepository(session)
-    todo = await repo.create(_make_input(subtasks=[SubtaskInput(title="Original", done=False)]))
+    todo = await repo.create(
+        _make_input(subtasks=[SubtaskInput(title="Original", done=False)])
+    )
     existing_id = todo.subtasks[0].id
 
     updated = await repo.update(
@@ -93,7 +103,9 @@ async def test_update_subtask_upsert(session):
 @pytest.mark.asyncio
 async def test_update_subtasks_absent_leaves_unchanged(session):
     repo = TodoRepository(session)
-    todo = await repo.create(_make_input(subtasks=[SubtaskInput(title="Keep me", done=False)]))
+    todo = await repo.create(
+        _make_input(subtasks=[SubtaskInput(title="Keep me", done=False)])
+    )
     updated = await repo.update(todo.id, UpdateTodoInput(title="New title"))
     assert len(updated.subtasks) == 1
     assert updated.subtasks[0].title == "Keep me"

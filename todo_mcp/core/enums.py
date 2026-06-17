@@ -1,27 +1,27 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class Status(str, Enum):
+class Status(StrEnum):
     to_do = "to_do"
     in_progress = "in_progress"
     blocked = "blocked"
     done = "done"
 
 
-class Priority(str, Enum):
+class Priority(StrEnum):
     high = "high"
     medium = "medium"
     low = "low"
 
 
-class SortField(str, Enum):
+class SortField(StrEnum):
     created_at = "created_at"
     updated_at = "updated_at"
     due_date = "due_date"
     priority = "priority"
-    title = "title"
+    title_ = "title"
 
 
-class SortOrder(str, Enum):
+class SortOrder(StrEnum):
     asc = "asc"
     desc = "desc"
