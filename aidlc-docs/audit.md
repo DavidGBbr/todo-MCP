@@ -8,6 +8,30 @@
 
 ---
 
+## Units Generation — COMPLETED
+**Timestamp**: 2026-06-17T00:05:00Z
+**User Input**: "answered!" (Q1=A — top-level tests/ directory)
+**AI Response**: Generated unit-of-work.md, unit-of-work-dependency.md, unit-of-work-story-map.md. Unit 1 = Data Layer (core + db, 14 capabilities). Unit 2 = MCP Server + Infrastructure (api + Docker, 19 capabilities). Full coverage check passed — all requirements mapped. INCEPTION PHASE complete.
+**Context**: Units Generation COMPLETED — INCEPTION PHASE COMPLETE — proceeding to CONSTRUCTION PHASE
+
+---
+
+## Application Design — COMPLETED
+**Timestamp**: 2026-06-17T00:04:00Z
+**User Input**: "I've just answered, could you check?" (Q1=B service layer, Q2=B layered packages, Q3=A pydantic-settings, Q4=B separate subtasks table)
+**AI Response**: No contradictions. Generated all 5 design artifacts: components.md, component-methods.md, services.md, component-dependency.md, application-design.md. Key decisions: TodoService orchestration layer, todo_mcp/{core,db,api} package structure, pydantic-settings config, separate subtasks table with FK.
+**Context**: Application Design COMPLETED — awaiting user approval before Units Generation
+
+---
+
+## Workflow Planning — COMPLETED
+**Timestamp**: 2026-06-17T00:03:00Z
+**User Input**: "sounds good for me, let's move forward" / "continue"
+**AI Response**: Generated execution-plan.md. Stages to execute: Application Design, Units Generation, Functional Design (x2), NFR Requirements (x2), NFR Design (x2), Infrastructure Design (Unit 2), Code Generation (x2), Build and Test. Stages skipped: Reverse Engineering (greenfield), User Stories (single-dev, clear scope). Two units defined: Unit 1 = Data Layer, Unit 2 = MCP Server + Infrastructure.
+**Context**: Workflow Planning COMPLETED — proceeding to Application Design
+
+---
+
 ## Requirements Analysis — Answers Received & Requirements Document Generated
 **Timestamp**: 2026-06-17T00:02:00Z
 **User Input**: "gotcha, I've just answered the requirements document here, now you can check"
