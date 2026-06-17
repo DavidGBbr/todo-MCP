@@ -4,7 +4,7 @@
 - **Project Name**: todo-mcp
 - **Project Type**: Greenfield
 - **Start Date**: 2026-06-17T00:00:00Z
-- **Current Stage**: INCEPTION COMPLETE → Next: CONSTRUCTION PHASE — Unit 1 Functional Design
+- **Current Stage**: CONSTRUCTION — Unit 1 NFR Design COMPLETED → Next: Unit 1 Code Generation
 
 ## Workspace State
 - **Existing Code**: No (only AI-DLC rule files present)
@@ -33,9 +33,9 @@
 - [x] Units Generation — COMPLETED (2026-06-17T00:05:00Z)
 
 ### CONSTRUCTION PHASE (per unit)
-- [ ] Functional Design — EXECUTE
-- [ ] NFR Requirements — EXECUTE
-- [ ] NFR Design — EXECUTE
+- [x] Functional Design — COMPLETED Unit 1 (2026-06-17T00:06:00Z)
+- [x] NFR Requirements — COMPLETED Unit 1 (2026-06-17T00:07:00Z)
+- [x] NFR Design — COMPLETED Unit 1 (2026-06-17T00:08:00Z)
 - [ ] Infrastructure Design — EXECUTE (Unit 2)
 - [ ] Code Generation — EXECUTE (always)
 - [ ] Build and Test — EXECUTE (always)

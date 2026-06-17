@@ -8,6 +8,30 @@
 
 ---
 
+## Unit 1 NFR Design — COMPLETED
+**Timestamp**: 2026-06-17T00:08:00Z
+**User Input**: "good, go ahead"
+**AI Response**: No open questions — all patterns derived directly from NFR Requirements. Generated nfr-design-patterns.md (context-manager session lifecycle, pool pre-ping, fail-closed validation, separate COUNT+SELECT pagination, GIN index for tags, parameterised queries, credential isolation, safe deserialisation, dependency pinning, repository abstraction, Hypothesis generator reuse) and logical-components.md (async engine, ORM models, TodoRepository, Pydantic schema layer, Alembic migration with full DDL, Settings, test infrastructure).
+**Context**: Unit 1 NFR Design COMPLETED — awaiting approval before Code Generation
+
+---
+
+## Unit 1 NFR Requirements — COMPLETED
+**Timestamp**: 2026-06-17T00:07:00Z
+**User Input**: "Answered!" (Q1=A Python 3.12, Q2=A pool_size=5/max_overflow=5, Q3=A real Postgres via testcontainers)
+**AI Response**: Generated nfr-requirements.md and tech-stack-decisions.md. Full security compliance table (7 applicable, 8 N/A). Tech stack: Python 3.12, UV, SQLAlchemy 2.x async, asyncpg, Alembic, Pydantic v2, pydantic-settings, testcontainers-python, Hypothesis, ruff, mypy.
+**Context**: Unit 1 NFR Requirements COMPLETED — awaiting approval before NFR Design
+
+---
+
+## Unit 1 Functional Design — COMPLETED
+**Timestamp**: 2026-06-17T00:06:00Z
+**User Input**: "I've just clarified!" (Q1=B PAGE_OUT_OF_RANGE error, Q2=A case-sensitive tags, Q3=B merge/upsert subtasks)
+**AI Response**: Generated domain-entities.md, business-rules.md, business-logic-model.md. 16 business rules defined. 5 PBT properties identified. Key decisions: PAGE_OUT_OF_RANGE error on out-of-range page, tags case-sensitive, subtask update is merge/upsert.
+**Context**: Unit 1 Functional Design COMPLETED — awaiting approval before NFR Requirements
+
+---
+
 ## Units Generation — COMPLETED
 **Timestamp**: 2026-06-17T00:05:00Z
 **User Input**: "answered!" (Q1=A — top-level tests/ directory)
